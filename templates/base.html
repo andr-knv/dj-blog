@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Best site ever</title>
+</head>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+<link href="https://fonts.googleapis.com/css?family=Lobster&subset=latin,cyrillic" rel="stylesheet"
+      type="text/css">
+<link rel="stylesheet" href="{% static 'css/blog.css' %}">
+
+<body>
+<div class="page-header">
+    <h1><a href="/">Best Site Ever</a></h1>
+
+</div>
+<div class="content container">
+    {% if request.user.is_staff %}
+        <a href="/post/create" class="top-menu"><span style="color:black"
+                                                      class="glyphicon glyphicon-plus"></span></a>
+    {% endif %}
+    <div class="row">
+        <div class=>
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load number_filter %}
+{% block content %}
+    <div class="post">
+
+        <h1>{{ post.title }}</h1>
+        <div class="date">
+            <p>Опубликовано: {{ post.publish_date }}</p>
+            <p>Автор: <a href="/author/{{ post.author }}">{{ post.author }}</a></p>
+        </div>
+
+        <p>{{ post.text|linebreaksbr|num_to_text|safe }}</p>
+        <img src="{{ post.image.url }}">
+    </div>
+{% endblock %}

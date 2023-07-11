@@ -1,0 +1,10 @@
+from django.urls import path
+
+from blog import views
+
+urlpatterns = [
+    path("", views.PostsView.as_view()),
+    path("<slug:slug>/", views.PostDetailView.as_view(), name="post_detail"),
+    path('author/<str:author_name>/', views.AuthorPostsListView.as_view(), name='user_detail'),
+    path('post/create/', views.PostCreateView.as_view(), name='post_create'),
+]

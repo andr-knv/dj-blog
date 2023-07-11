@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load number_filter %}
+{% load thumbnail %}
+{% block content %}
+    {% for post in post_list %}
+        <div class="post">
+            <h1><a href="{% url 'post_detail' slug=post.url %}">{{ post.title }}</a></h1>
+            <div class="date">
+                <p>Опубликовано: {{ post.publish_date }}</p>
+                <p>Автор: <a
+                        href="/author/{{ post.author }}">{{ post.author }}</a>
+                </p>
+                {% thumbnail post.image "800x600" as i %}
+                    <img src="{{ i.url }}">
+                {% endthumbnail %}
+            </div>
+            <p>{{ post.text|linebreaksbr|truncatewords:50|num_to_text|safe }}</p>
+        </div>
+    {% endfor %}
+{% endblock %}

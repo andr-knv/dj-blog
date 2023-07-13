@@ -1,10 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.contrib.auth.models import User
 from django.http import HttpResponseForbidden
 from django.utils import timezone
 from django.utils.text import slugify
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
+from .forms import PostForm
 from .models import Post
 
 
@@ -46,11 +46,11 @@ class AuthorPostsListView(ListView):
         return context
 
 
-class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+class PostCreateView(LoginRequiredMixin, CreateView):
     """Форма для публикации поста"""
     model = Post
     template_name = 'blog/post_create.html'
-    fields = ['title', 'text', 'image']
+    form_class = PostForm
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -66,8 +66,23 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         form.instance.url = unique_slug
         return super().form_valid(form)
 
+    def handle_no_permission(self):
+        return HttpResponseForbidden()
+
+
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    """Форма для редактирования поста"""
+    model = Post
+    template_name = "blog/post_update.html"
+    form_class = PostForm
+    slug_field = 'url'
+
     def test_func(self):
-        return self.request.user.is_authenticated
+        post = self.get_object()
+        return self.request.user.is_superuser or self.request.user == post.author
 
     def handle_no_permission(self):
         return HttpResponseForbidden()
+
+    def form_valid(self, form):
+        return super().form_valid(form)

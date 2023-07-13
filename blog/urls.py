@@ -7,4 +7,5 @@ urlpatterns = [
     path("<slug:slug>/", views.PostDetailView.as_view(), name="post_detail"),
     path('author/<str:author_name>/', views.AuthorPostsListView.as_view(), name='user_detail'),
     path('post/create/', views.PostCreateView.as_view(), name='post_create'),
+    path('post/<slug:slug>/update/', views.PostUpdateView.as_view(), name='post_update'),
 ]

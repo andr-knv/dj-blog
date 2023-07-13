@@ -55,15 +55,8 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         form.instance.publish_date = timezone.now()
-
-        slug = slugify(form.instance.title)
-        unique_slug = slug
-        counter = 1
-        while Post.objects.filter(url=unique_slug).exists():
-            unique_slug = f"{slug}-{counter}"
-            counter += 1
-
-        form.instance.url = unique_slug
+        slug = slugify(f'{form.instance.title}-{timezone.now()}')
+        form.instance.url = slug
         return super().form_valid(form)
 
     def handle_no_permission(self):

@@ -1,0 +1,10 @@
+services:
+  blog:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./django-blog:/django-blog
+    command: >
+      sh -c "python manage.py runserver 0.0.0.0:8000"

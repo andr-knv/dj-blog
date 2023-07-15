@@ -18,7 +18,7 @@
                     <img src="{{ i.url }}">
                 {% endthumbnail %}
             </div>
-            <p>{{ post.text|linebreaksbr|truncatewords:50|num_to_text|safe }}</p>
+            <p>{{ post.text|truncatewords:50|num_to_text|safe }}</p>
         </div>
     {% endfor %}
 {% endblock %}

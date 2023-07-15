@@ -9,10 +9,9 @@ register = template.Library()
 @register.filter
 def num_to_text(val):
     pattern = r'\d+'
-    result = re.sub(
+
+    return re.sub(
         pattern,
         lambda match: num2words(int(match.group(0)), lang='ru'),
         val
     )
-
-    return result

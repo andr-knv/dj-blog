@@ -79,3 +79,9 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def form_valid(self, form):
         return super().form_valid(form)
+
+#TODO: Статистика, количество постов, дата последней публикации
+#TODO: Фильтр шаблонизатора, перекрашивающий каждый 2 абзац
+#TODO: Черновик
+#TODO: Авторизация
+#TODO: Docker

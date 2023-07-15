@@ -1,19 +1,21 @@
 {% extends 'base.html' %}
 {% load number_filter %}
+{% load alternate_paragraphs %}
 {% block content %}
     <div class="post">
-
+        {% if request.user.is_staff or request.user == post.author %}
+        <a href="/post/{{ post.url }}/update" class="top-menu"><span style="color:black"
+                                                      class="glyphicon glyphicon-plus"></span></a>
+    {% endif %}
         <h1>{{ post.title }}</h1>
         <div class="date">
             <p>Опубликовано: {{ post.publish_date }}</p>
             <p>Автор: <a href="/author/{{ post.author }}">{{ post.author }}</a></p>
         </div>
-        {% if request.user.is_staff or request.user == post.author %}
-        <a href="/post/{{ post.url }}/update" class="top-menu"><span style="color:black"
-                                                      class="glyphicon glyphicon-plus"></span></a>
-    {% endif %}
+       
 
-        <p>{{ post.text|linebreaksbr|num_to_text|safe }}</p>
+    
+        <p>{{ post.text|num_to_text|alternate_paragraphs|safe }}</p>
         <img src="{{ post.image.url }}">
     </div>
 {% endblock %}

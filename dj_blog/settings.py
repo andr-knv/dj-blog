@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'debug_toolbar',
     'sorl.thumbnail',
+    'tinymce',
 
     'blog',
 ]
@@ -123,7 +124,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-# STATIC_ROOT = BASE_DIR / 'static'
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [STATIC_DIR]
 

@@ -6,3 +6,4 @@ venv
 .idea/
 Dockerfile
 post_update.html
+*.swp

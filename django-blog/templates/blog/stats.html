@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Authors Table</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Автор</th>
+                <th>Количество записей</th>
+                <th>Последняя публикация</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in authors_stats %}
+                <tr>
+                    <td>{{ data.author__username }}</td>
+                    <td>{{ data.num_posts }}</td>
+                    <td>{{ data.last_publish_date }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

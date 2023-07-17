@@ -1,8 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db.models import Max, Count
 from django.http import HttpResponseForbidden
 from django.utils import timezone
 from django.utils.text import slugify
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, TemplateView
 
 from .forms import PostForm
 from .models import Post
@@ -80,8 +81,22 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def form_valid(self, form):
         return super().form_valid(form)
 
-#TODO: Статистика, количество постов, дата последней публикации
-#TODO: Фильтр шаблонизатора, перекрашивающий каждый 2 абзац
-#TODO: Черновик
-#TODO: Авторизация
-#TODO: Docker
+
+class StatisticsView(TemplateView):
+    template_name = "blog/stats.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        data = Post.objects.values(
+            'author__username'
+        ).annotate(num_posts=Count('author__username'),
+                   last_publish_date=Max('publish_date'))
+        context['authors_stats'] = data
+
+        return context
+
+
+# TODO: tinymce в шаблоне
+# TODO: Черновик
+# TODO: Авторизация
+

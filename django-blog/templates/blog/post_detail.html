@@ -4,17 +4,17 @@
 {% block content %}
     <div class="post">
         {% if request.user.is_staff or request.user == post.author %}
-        <a href="/post/{{ post.url }}/update" class="top-menu"><span style="color:black"
-                                                      class="glyphicon glyphicon-plus"></span></a>
-    {% endif %}
+            <a href="/post/{{ post.url }}/update" class="top-menu">
+                <button class="btn btn-default ">Редактировать</button>
+            </a>
+        {% endif %}
         <h1>{{ post.title }}</h1>
         <div class="date">
             <p>Опубликовано: {{ post.publish_date }}</p>
             <p>Автор: <a href="/author/{{ post.author }}">{{ post.author }}</a></p>
         </div>
-       
 
-    
+
         <p>{{ post.text|num_to_text|alternate_paragraphs|safe }}</p>
         <img src="{{ post.image.url }}">
     </div>

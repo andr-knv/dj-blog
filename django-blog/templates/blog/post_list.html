@@ -3,9 +3,13 @@
 {% load thumbnail %}
 {% block content %}
     {% if request.user.is_authenticated %}
-        <a href="/post/create" class="top-menu"><span style="color:black"
-                                                      class="glyphicon glyphicon-plus"></span></a>
+        <a href="/post/create" class="top-menu">
+            <button class="btn btn-default ">Добавить запись</button>
+        </a>
     {% endif %}
+    <a href="/authors/stats" class="top-menu">
+            <button class="btn btn-default ">Статистика</button>
+        </a>
     {% for post in post_list %}
         <div class="post">
             <h1><a href="{% url 'post_detail' slug=post.url %}">{{ post.title }}</a></h1>

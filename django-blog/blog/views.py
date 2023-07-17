@@ -21,29 +21,25 @@ class PostDetailView(DetailView):
     slug_field = "url"
 
 
-class AuthorPostsListView(ListView):
+class AuthorPosts(TemplateView):
     """Отображение всех постов автора"""
-    model = Post
     template_name = "blog/user_detail.html"
-    context_object_name = 'posts'
-
-    def get_queryset(self):
-        author_name = self.kwargs['author_name']
-
-        return Post.objects.select_related(
-            'author'
-        ).filter(author__username=author_name).values("title", "url", "publish_date")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         author_name = self.kwargs['author_name']
 
-        last_publish_date = Post.objects.select_related(
-            'author'
-        ).filter(author__username=author_name).values('publish_date').last()
+        data = Post.objects.filter(
+            author__username=author_name
+        ).values(
+            'author__username', 'url', 'title', 'publish_date'
+        )
+        latest = Post.objects.filter(author__username=author_name).latest('publish_date')
 
-        context['last_publish_date'] = last_publish_date['publish_date']
-        context['author_name'] = author_name
+        context['posts'] = data
+        context['latest'] = latest.publish_date
+        print(latest)
+
         return context
 
 
@@ -93,10 +89,9 @@ class StatisticsView(TemplateView):
                    last_publish_date=Max('publish_date'))
         context['authors_stats'] = data
 
-        return context
 
+        return context
 
 # TODO: tinymce в шаблоне
 # TODO: Черновик
 # TODO: Авторизация
-

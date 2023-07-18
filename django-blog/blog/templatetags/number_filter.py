@@ -12,7 +12,7 @@ def num_to_text(val):
 
     return re.sub(
         pattern,
-        lambda match: num2words(int(match.group(0)), lang='ru') if match.group(
-            1) else match.group(2),
+        lambda match: num2words(
+            int(match.group(0)), lang='ru') if match.group(1) else match.group(2),
         val
     )

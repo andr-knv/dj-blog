@@ -89,9 +89,4 @@ class StatisticsView(TemplateView):
                    last_publish_date=Max('publish_date'))
         context['authors_stats'] = data
 
-
         return context
-
-# TODO: tinymce в шаблоне
-# TODO: Черновик
-# TODO: Авторизация

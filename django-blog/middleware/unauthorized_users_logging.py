@@ -19,17 +19,17 @@ class UnauthorizedUsersLoggerMiddleware:
         response = self.get_response(request)
 
         if settings.LOG_UNREGISTERED_USER_ACTIVITY and not request.user.is_authenticated:
-            ip_address = self.get_client_ip(request)
+            ip_address = self.__get_client_ip(request)
 
             full_url = request.build_absolute_uri()
 
             self.logger.info(
-                f"Unregistered user IP: {ip_address} URL: {full_url} Type {request.method}")
+                f"Unregistered user IP: {ip_address} URL: {full_url} Type {request.method}"
+            )
 
         return response
 
-    @staticmethod
-    def get_client_ip(request):
+    def __get_client_ip(self, request):
         x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
         if x_forwarded_for:
             ip = x_forwarded_for.split(',')[0]

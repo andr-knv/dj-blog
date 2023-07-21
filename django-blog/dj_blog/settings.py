@@ -132,5 +132,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 INTERNAL_IPS = ["127.0.0.1"]
+
 LOG_UNREGISTERED_USER_ACTIVITY = True
+
+CELERY_BROKER_URL = 'redis://redis:6379/0'

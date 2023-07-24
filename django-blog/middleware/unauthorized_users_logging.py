@@ -1,5 +1,5 @@
+from datetime import datetime
 import logging
-import sys
 
 from django.conf import settings
 
@@ -9,22 +9,21 @@ class UnauthorizedUsersLoggerMiddleware:
         self.get_response = get_response
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.INFO)
-
         console_handler = logging.StreamHandler()
-        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-        console_handler.setFormatter(formatter)
         self.logger.addHandler(console_handler)
 
     def __call__(self, request):
         response = self.get_response(request)
 
-        if settings.LOG_UNREGISTERED_USER_ACTIVITY and not request.user.is_authenticated:
+        if (
+            settings.LOG_UNREGISTERED_USER_ACTIVITY and not 
+            request.user.is_authenticated
+        ):
             ip_address = self.__get_client_ip(request)
-
-            full_url = request.build_absolute_uri()
+            path = request.path
 
             self.logger.info(
-                f"Unregistered user IP: {ip_address} URL: {full_url} Type {request.method}"
+                f"{datetime.now()} - [Unregistered user IP: {ip_address} URL: {path} Type: {request.method}]"
             )
 
         return response

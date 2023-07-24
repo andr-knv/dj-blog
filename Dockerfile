@@ -1,14 +1,11 @@
-FROM python:3.11-alpine3.18
+FROM python:3.11-alpine
 
-COPY requirements.txt /temp/requirements.txt
-RUN apk add build-base libpq postgresql-dev && \
-    pip install  -r /temp/requirements.txt
-
-
-ENV PATH=/root/.local/bin:$PATH \
-    PYTHONUNBUFFERED=1 \
+ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1
 
+COPY requirements.txt /temp/requirements.txt
+
+RUN pip install --upgrade pip; pip install  -r /temp/requirements.txt
 
 COPY django-blog /django-blog
 

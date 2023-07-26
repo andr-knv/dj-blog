@@ -27,7 +27,7 @@ class TestAccess(TestCase):
         url = reverse('post_detail', args=[self.post.url])
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 404)
 
         self.client.login(username='user', password='password')
         response = self.client.get(url)

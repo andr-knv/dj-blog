@@ -7,27 +7,48 @@ on:
 
 jobs:
   test:
-    name: Run Django Tests
+    name: Run Django Tests with Celery
     runs-on: ubuntu-latest
 
+    services:
+      database:
+        image: postgres:15.3-alpine
+        env:
+          POSTGRES_DB: dbname
+          POSTGRES_USER: dbuser
+          POSTGRES_PASSWORD: password
+
+      redis:
+        image: redis:7.0.12-alpine
+        options: >-
+          --entrypoint redis-server
+          --name redis
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Set up Docker Compose
-        uses: docker/compose-cli
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11
 
-      - name: Build Docker Compose services
-        run: docker-compose build
+    - name: Install dependencies
+      run: pip install -r requirements.txt  
 
-      - name: Run Django makemigrations
-        run: docker-compose run --rm blog sh -c "python manage.py makemigrations"
+    - name: Run Django makemigrations
+      run: python manage.py makemigrations
 
-      - name: Run Django migrate
-        run: docker-compose run --rm blog sh -c "python manage.py migrate"
+    - name: Run Django migrate
+      run: python manage.py migrate
 
-      - name: Run Django tests
-        run: docker-compose run --rm blog sh -c "python manage.py test"
+    - name: Start Celery worker
+      run: celery -A celery_app.app worker --loglevel=info
+      continue-on-error: true
+     
+    - name: Start Celery beat
+      run: celery -A dj_blog beat --scheduler django_celery_beat.schedulers:DatabaseScheduler --loglevel=info
+      continue-on-error: true
 
-      - name: Stop and remove containers
-        run: docker-compose down
+    - name: Run Django tests
+      run: python manage.py test

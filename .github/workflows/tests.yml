@@ -53,4 +53,5 @@ jobs:
       continue-on-error: true
 
     - name: Run Django tests
+      working-directory: ./dj-blog 
       run: python manage.py test

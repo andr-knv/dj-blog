@@ -10,24 +10,24 @@ jobs:
     name: Run Django Tests
     runs-on: ubuntu-latest
 
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up Docker Compose
-      uses: docker/compose-cli@v1
+      - name: Set up Docker Compose
+        uses: docker/compose-cli@v1
 
-    - name: Build Docker Compose services
-      run: docker-compose build
+      - name: Build Docker Compose services
+        run: docker-compose build
 
-    - name: Run Django makemigrations
-      run: docker-compose run --rm blog sh -c "python manage.py makemigrations"
+      - name: Run Django makemigrations
+        run: docker-compose run --rm blog sh -c "python manage.py makemigrations"
 
-    - name: Run Django migrate
-      run: docker-compose run --rm blog sh -c "python manage.py migrate"
+      - name: Run Django migrate
+        run: docker-compose run --rm blog sh -c "python manage.py migrate"
 
-    - name: Run Django tests
-      run: docker-compose run --rm blog sh -c "python manage.py test"
+      - name: Run Django tests
+        run: docker-compose run --rm blog sh -c "python manage.py test"
 
-    - name: Stop and remove containers
-      run: docker-compose down
+      - name: Stop and remove containers
+        run: docker-compose down

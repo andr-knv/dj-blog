@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load number_filter %}
-{% load alternate_paragraphs %}
+{% load thumbnail %}
 {% block content %}
     <div class="post">
         {% if request.user.is_staff or request.user == post.author %}
@@ -15,7 +15,9 @@
         </div>
 
 
-        <p>{{ post.text|num_to_text|alternate_paragraphs|safe }}</p>
-        <img src="{{ post.image.url }}">
+        <p>{{ post.text|num_to_text|safe }}</p>
+        {% thumbnail post.image "800x600" as i %}
+            <img src="{{ i.url }}">
+        {% endthumbnail %}
     </div>
 {% endblock %}

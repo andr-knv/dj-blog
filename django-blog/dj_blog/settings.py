@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'sorl.thumbnail',
     'tinymce',
+    'django_celery_beat',
 
     'blog',
 ]
@@ -87,6 +88,7 @@ DATABASES = {
         'NAME': os.environ.get('DB_NAME'),
         'USER': os.environ.get('DB_USER'),
         'PASSWORD': os.environ.get('DB_PASS'),
+        'PORT': '5432'
     }
 }
 
@@ -138,3 +140,6 @@ INTERNAL_IPS = ["127.0.0.1"]
 LOG_UNREGISTERED_USER_ACTIVITY = True
 
 CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+CELERY_ENABLE_UTC = False
+CELERY_TIMEZONE = 'Europe/Moscow'

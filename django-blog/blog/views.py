@@ -1,24 +1,35 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Max, Count
-from django.http import HttpResponseForbidden
+from django.http import Http404
 from django.utils import timezone
 from django.utils.text import slugify
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, TemplateView
 
-from .forms import PostForm
+from .forms import PostFormCreate, PostFormUpdate
 from .models import Post
 
 
 class PostsView(ListView):
     """Отображение всех постов"""
     model = Post
-    queryset = Post.objects.select_related("author").order_by('-publish_date')
+    queryset = Post.objects.select_related(
+        "author"
+    ).filter(is_published=True).order_by('-publish_date')
 
 
-class PostDetailView(DetailView):
+class PostDetailView(UserPassesTestMixin, DetailView):
     """Полное отображение поста"""
     model = Post
     slug_field = "url"
+
+    def test_func(self):
+        post = self.get_object()
+        allowed_view = (self.request.user.is_authenticated and
+                        (self.request.user.is_superuser or self.request.user == post.author))
+        return post.is_published or allowed_view
+
+    def handle_no_permission(self):
+        raise Http404("Post not fount")
 
 
 class AuthorPosts(TemplateView):
@@ -47,24 +58,23 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     """Форма для публикации поста"""
     model = Post
     template_name = 'blog/post_create.html'
-    form_class = PostForm
+    form_class = PostFormCreate
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        form.instance.publish_date = timezone.now()
         slug = slugify(f'{form.instance.title}-{timezone.now()}')
         form.instance.url = slug
         return super().form_valid(form)
 
     def handle_no_permission(self):
-        return HttpResponseForbidden()
+        raise Http404("Post not fount")
 
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Форма для редактирования поста"""
     model = Post
     template_name = "blog/post_update.html"
-    form_class = PostForm
+    form_class = PostFormUpdate
     slug_field = 'url'
 
     def test_func(self):
@@ -72,7 +82,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return self.request.user.is_superuser or self.request.user == post.author
 
     def handle_no_permission(self):
-        return HttpResponseForbidden()
+        raise Http404("Post not fount")
 
     def form_valid(self, form):
         return super().form_valid(form)

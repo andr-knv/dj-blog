@@ -14,6 +14,7 @@ class Post(models.Model):
     publish_date = models.DateTimeField(blank=True, null=True)
     image = models.ImageField("Image", upload_to='post_image/')
     url = models.SlugField(max_length=150)
+    is_published = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.title}'

@@ -35,6 +35,28 @@ services:
     command: -A celery_app.app worker --loglevel=info
     volumes:
       - ./django-blog:/django-blog
+    environment:
+      - DB_HOST=database
+      - DB_NAME=dbname
+      - DB_USER=dbuser
+      - DB_PASS=password
+    links:
+      - redis
+    depends_on:
+      - database
+      - redis
+
+  celery-beat:
+    build:
+      context: .
+    command: celery -A dj_blog beat --scheduler django_celery_beat.schedulers:DatabaseScheduler --loglevel=info
+    volumes:
+      - ./django-blog:/django-blog
+    environment:
+      - DB_HOST=database
+      - DB_NAME=dbname
+      - DB_USER=dbuser
+      - DB_PASS=password
     links:
       - redis
     depends_on:

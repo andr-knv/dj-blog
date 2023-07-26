@@ -14,20 +14,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Docker Compose
-        uses: docker/compose-cli@v1
+      - name: Set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.11
 
-      - name: Build Docker Compose services
+      - name: Docker compose build
         run: docker-compose build
 
-      - name: Run Django makemigrations
-        run: docker-compose run --rm blog sh -c "python manage.py makemigrations"
+      - name: Make migrations
+        run: |
+          docker-compose run --rm blog sh -c "python manage.py makemigrations"
+          docker-compose run --rm blog sh -c "python manage.py migrate"
 
-      - name: Run Django migrate
-        run: docker-compose run --rm blog sh -c "python manage.py migrate"
-
-      - name: Run Django tests
+      - name: Run tests
         run: docker-compose run --rm blog sh -c "python manage.py test"
-
-      - name: Stop and remove containers
-        run: docker-compose down

@@ -36,14 +36,7 @@ jobs:
     - name: Install dependencies
       run: pip install -r requirements.txt  
 
-    - name: Run Django makemigrations
-      working-directory: ./dj-blog 
-      run: python manage.py makemigrations
-
-    - name: Run Django migrate
-      working-directory: ./dj-blog 
-      run: python manage.py migrate
-
+    
     - name: Start Celery worker
       run: celery -A celery_app.app worker --loglevel=info
       continue-on-error: true
@@ -51,7 +44,16 @@ jobs:
     - name: Start Celery beat
       run: celery -A dj_blog beat --scheduler django_celery_beat.schedulers:DatabaseScheduler --loglevel=info
       continue-on-error: true
+      
+    - name: Run Django makemigrations
+      working-directory: ./django-blog 
+      run: python manage.py makemigrations
+
+    - name: Run Django migrate
+      working-directory: ./django-blog 
+      run: python manage.py migrate
+
 
     - name: Run Django tests
-      working-directory: ./dj-blog 
+      working-directory: ./django-blog 
       run: python manage.py test

@@ -37,9 +37,11 @@ jobs:
       run: pip install -r requirements.txt  
 
     - name: Run Django makemigrations
+      working-directory: ./dj-blog 
       run: python manage.py makemigrations
 
     - name: Run Django migrate
+      working-directory: ./dj-blog 
       run: python manage.py migrate
 
     - name: Start Celery worker

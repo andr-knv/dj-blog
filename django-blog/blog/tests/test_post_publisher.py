@@ -23,7 +23,6 @@ class PostPublisherTestCase(TestCase):
             )
             self.unpublished_posts.append(post)
 
-
     def test_posts_are_in_db(self):
         posts = Post.objects.all()
         for post in posts:

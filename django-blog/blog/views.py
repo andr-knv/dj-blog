@@ -12,9 +12,9 @@ from .models import Post
 class PostsView(ListView):
     """Отображение всех постов"""
     model = Post
-    queryset = Post.objects.select_related(
-        "author"
-    ).filter(is_published=True).order_by('-publish_date')
+
+    queryset = Post.objects.select_related("author").filter(is_published=True).order_by(
+        '-publish_date')
 
 
 class PostDetailView(UserPassesTestMixin, DetailView):
@@ -24,8 +24,8 @@ class PostDetailView(UserPassesTestMixin, DetailView):
 
     def test_func(self):
         post = self.get_object()
-        allowed_view = (self.request.user.is_authenticated and
-                        (self.request.user.is_superuser or self.request.user == post.author))
+        allowed_view = (self.request.user.is_authenticated and (
+                    self.request.user.is_superuser or self.request.user == post.author))
         return post.is_published or allowed_view
 
     def handle_no_permission(self):
@@ -40,11 +40,9 @@ class AuthorPosts(TemplateView):
         context = super().get_context_data(**kwargs)
         author_name = self.kwargs['author_name']
 
-        data = Post.objects.filter(
-            author__username=author_name
-        ).values(
-            'author__username', 'url', 'title', 'publish_date'
-        )
+        data = Post.objects.filter(author__username=author_name).values('author__username', 'url',
+                                                                        'title', 'publish_date')
+
         latest = Post.objects.filter(author__username=author_name).latest('publish_date')
 
         context['posts'] = data
@@ -93,10 +91,10 @@ class StatisticsView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        data = Post.objects.values(
-            'author__username'
-        ).annotate(num_posts=Count('author__username'),
-                   last_publish_date=Max('publish_date'))
+        data = Post.objects.values('author__username').annotate(num_posts=Count('author__username'),
+                                                                last_publish_date=Max(
+                                                                    'publish_date'))
+
         context['authors_stats'] = data
 
         return context

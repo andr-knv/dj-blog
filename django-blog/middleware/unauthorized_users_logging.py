@@ -15,16 +15,13 @@ class UnauthorizedUsersLoggerMiddleware:
     def __call__(self, request):
         response = self.get_response(request)
 
-        if (
-            settings.LOG_UNREGISTERED_USER_ACTIVITY and not 
-            request.user.is_authenticated
-        ):
+        if (settings.LOG_UNREGISTERED_USER_ACTIVITY
+                and not request.user.is_authenticated):
             ip_address = self.__get_client_ip(request)
             path = request.path
 
             self.logger.info(
-                f"{datetime.now()} - [Unregistered user IP: {ip_address} URL: {path} Type: {request.method}]"
-            )
+                f"{datetime.now()} - [Unregistered user IP: {ip_address} URL: {path} Type: {request.method}]")
 
         return response
 

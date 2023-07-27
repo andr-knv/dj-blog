@@ -19,5 +19,7 @@ class PostPublisher:
 @shared_task
 def publish_posts():
     unpublished_posts = PostPublisher.select_posts()
-    for post in unpublished_posts:
-        PostPublisher.publish_post(post)
+
+    if unpublished_posts:
+        for post in unpublished_posts:
+            PostPublisher.publish_post(post)

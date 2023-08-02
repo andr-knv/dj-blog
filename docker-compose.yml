@@ -12,19 +12,21 @@ services:
       - DB_USER=dbuser
       - DB_PASS=password
     command: >
-      sh -c "python manage.py runserver 0.0.0.0:8000"
+      sh -c "python3 manage.py runserver 0.0.0.0:8000"
     depends_on:
       - database
   
   database:
-    image: postgres:15.3-alpine
+    image: postgres:15.3-bookworm
     environment:
       - POSTGRES_DB=dbname
       - POSTGRES_USER=dbuser
       - POSTGRES_PASSWORD=password
+    volumes:
+      - ./django-blog:/django-blog
 
   redis:
-    image: redis:7.0.12-alpine
+    image: redis:7.0.12-bookworm
     hostname: redis
 
   worker:

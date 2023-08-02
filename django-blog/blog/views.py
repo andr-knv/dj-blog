@@ -47,7 +47,6 @@ class AuthorPosts(TemplateView):
 
         context['posts'] = data
         context['latest'] = latest.publish_date
-        print(latest)
 
         return context
 
